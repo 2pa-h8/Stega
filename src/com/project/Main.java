@@ -140,14 +140,13 @@ public class Main {
         // --------------------------------------------- 11 ---------------------------------------------
         // Формирование контейнера S = Cnorm + Kg * E
 
-        //Arrays.stream(E).map(Arrays::toString).forEach(System.out::println);
-
         int[][] S = matrixUtil.add(matrixUtil.multiplyingMatrixByNumber(E, Kg), cNorm);
 
 
         // сохранение изображения
-//        originalImage.setColorComponent(S, Picture.RED_CHANEL);
-//        originalImage.saveImage(SAVED_LOCATION);
+        originalImage.setColorComponent(matrixUtil.multiplyingMatrixByNumber(E, 255), Picture.RED_CHANEL);
+        originalImage.saveImage(SAVED_LOCATION);
+        originalImage.showImage();
 
 //       Arrays.stream(S).map(Arrays::toString).forEach(System.out::println);
 
@@ -164,9 +163,9 @@ public class Main {
 //        System.out.println(Arrays.toString(mResult));
 //        System.out.println(mResult.length);
 
-        watermark.recover(mResult);
-        watermark.saveImage(SAVED_LOCATION);
-        watermark.showImage();
+//        watermark.recover(mResult);
+//        watermark.saveImage(SAVED_LOCATION);
+//        watermark.showImage();
     }
 
     /*

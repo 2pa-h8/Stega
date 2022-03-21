@@ -61,15 +61,15 @@ public class Main {
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-//       int[] polynomial = {1, 1, 1, 1, 1, 1, 1, 0, 0, 1};
-       int[] polynomial = Polynomial.getPoly(11);
-
-        System.out.println(polynomial.length);
-        log.info("Полином : {}", Arrays.toString(polynomial));
-
-        d = log(2048, 2);
+        d = log(Nfi, 2);
 
         log.info("Степень полинома d : {}", d);
+
+        int[] polynomial = Polynomial.getPoly(d);
+
+        System.out.println(polynomial.length);
+
+        log.info("Полином : {}", Arrays.toString(polynomial));
 
         int s = 55; // Начальное состаяние регистра s задается в виде произвольного числа
 

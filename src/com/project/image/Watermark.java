@@ -2,46 +2,54 @@ package com.project.image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Watermark extends Picture {
     public Watermark(String path) {
         super(path);
     }
 
-    public Integer[] getBlackWhitePixelsArr() {
-        ArrayList<Integer> resultPixels = new ArrayList<>();
+    public int[] testFillContainer() {
+        int height = getHeight();
+        int width = getWidth();
+        int[] res = new int[height * width];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = i % 2 == 0 ? 1 : 0;
+        }
+        return res;
+    }
+
+    public int[] getBlackWhitePixelsArr() {
         int heightWatermark = getHeight();
         int widthWatermark = getWidth();
+        int k = 0;
 
-        Integer[] res = new Integer[heightWatermark * widthWatermark];
+        int[] res = new int[heightWatermark * widthWatermark];
 
         for (int x = 0; x < heightWatermark; x++) {
             for (int y = 0; y < widthWatermark; y++) {
                 Color pixel = new Color(getRGB(x, y));
-
                 if (pixel.getRed() == 0 && pixel.getGreen() == 0 & pixel.getBlue() == 0) {
-                    resultPixels.add(0);
+                    res[k] = 0;
                 } else {
-                    resultPixels.add(1);
+                    res[k] = 1;
                 }
+                k++;
             }
         }
 
-        return resultPixels.toArray(res);
+        return res;
     }
 
     public void recover(int[] pixelsArr) {
-        int weight = getWidth();
+        int width = getWidth();
         int height = getHeight();
 
-        System.out.println("height " + height );
         int i = 0;
 
-        this.bufferedImage = new BufferedImage(height, weight, Picture.BMP_IMAGE_TYPE);
+        this.bufferedImage = new BufferedImage(width, height, Picture.BMP_IMAGE_TYPE);
 
         for (int x = 0; x < height; x++) {
-            for (int y = 0; y < weight; y++) {
+            for (int y = 0; y < width; y++) {
                 Color pixel = pixelsArr[i] == 0 ? new Color(0,0,0)
                         : new Color(255,255,255);
 

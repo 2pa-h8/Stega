@@ -33,6 +33,7 @@ public class Main {
         final int X_WATERMARK = watermark.getWidth(); // 32
         final int Y_WATERMARK = watermark.getHeight(); // 32
 
+
 //        watermark.saveImage(SAVED_LOCATION);
 //        watermark.showImage();
 
@@ -91,12 +92,14 @@ public class Main {
 
         // Вывод одного из элементов матрицы
 
-        //Arrays.stream(matricesF.get(555)).map(Arrays::toString).forEach(System.out::println);
+        //Arrays.stream(matricesF.get(110)).map(Arrays::toString).forEach(System.out::println);
 
         // --------------------------------------------- 6 ---------------------------------------------
         // Расчет степени ортогональности сигнала контейнера к базисным функциям
 
         int[][] redComponents = originalImage.getColorComponent(Picture.RED_CHANEL);
+
+        log.info("Components arr : {}", redComponents);
 
         // Arrays.stream(redComponents).map(Arrays::toString).forEach(System.out::println);
 
@@ -110,12 +113,17 @@ public class Main {
         // Преобразование ЦВЗ в одномерный массив значений (255 и 0)
         // значения пикселей ЦВЗ равняются 0 и 255, так как изображение черно-белое
 
-        Integer[] arrPixelsWatermark = watermark.getBlackWhitePixelsArr();
+        int[] arrPixelsWatermark = watermark.getBlackWhitePixelsArr();
+//        int[] arrPixelsWatermark = watermark.testFillContainer();
+
+        //System.out.println(Arrays.toString(arrPixelsWatermark));
 
         // --------------------------------------------- 8 ---------------------------------------------
         // М модуляция полученного массива базисными функциями
 
         int[][] E = modulation(X_ORIGINAL, Y_ORIGINAL, arrPixelsWatermark, matricesF);
+
+        Arrays.stream(E).map(Arrays::toString).forEach(System.out::println);
 
         log.info("Размер модулированного сообщения E : {} x {}", E.length, E.length);
 
@@ -140,13 +148,7 @@ public class Main {
         // --------------------------------------------- 11 ---------------------------------------------
         // Формирование контейнера S = Cnorm + Kg * E
 
-        int[][] S = matrixUtil.add(matrixUtil.multiplyingMatrixByNumber(E, Kg), cNorm);
-
-
-        // сохранение изображения
-        originalImage.setColorComponent(matrixUtil.multiplyingMatrixByNumber(E, 255), Picture.RED_CHANEL);
-        originalImage.saveImage(SAVED_LOCATION);
-        originalImage.showImage();
+        int[][] S = matrixUtil.add(cNorm, MatrixUtil.multiplyingMatrixByNumber(E, Kg));
 
 //       Arrays.stream(S).map(Arrays::toString).forEach(System.out::println);
 
@@ -163,9 +165,11 @@ public class Main {
 //        System.out.println(Arrays.toString(mResult));
 //        System.out.println(mResult.length);
 
-//        watermark.recover(mResult);
-//        watermark.saveImage(SAVED_LOCATION);
-//        watermark.showImage();
+
+
+        watermark.recover(mResult);
+        watermark.saveImage(SAVED_LOCATION);
+        watermark.showImage();
     }
 
     /*
@@ -182,7 +186,7 @@ public class Main {
             for (int x = 0; x < X; x++) {
                 for (int y = 0; y < Y; y++) {
                     int[][] element = matricesF.get(i);
-                    m = S[x][y] * element[x][y];
+                    m += S[x][y] * element[x][y];
                 }
             }
 
@@ -190,9 +194,11 @@ public class Main {
                 result[i] = 1;
             } else if (m < 0) {
                 result[i] = 0;
-            } else if (m == 0) {
-                result[i] = Math.round(rnd.nextFloat(1));
+            } else {
+                result[i] = Math.round(rnd.nextFloat());
             }
+
+            m = 0;
         }
 
         return result;
@@ -237,7 +243,7 @@ public class Main {
     Модуляция полученного массива базисными функциями
     */
 
-    static int[][] modulation(int X, int Y, Integer[] M, List<int[][]> matricesF) {
+    static int[][] modulation(int X, int Y, int[] M, List<int[][]> matricesF) {
         int mLength = M.length;
         int[][] result = new int[X][Y];
         ArrayList<Integer> mVecBin = new ArrayList<>();
@@ -246,7 +252,7 @@ public class Main {
             if (j == 0) {
                 mVecBin.add(-1);
             } else {
-                mVecBin.add(0);
+                mVecBin.add(1);
             }
         }
 
@@ -294,7 +300,7 @@ public class Main {
     static List<int[][]> formationOfArrayOfBasisFunctions(int[][] basicFunc, int[] psp, int n, int X, int Y, int Nfi) {
         List<int[][]> matrices = new ArrayList<>();
 
-        for (int i = 0; i < 1024; i++) {
+        for (int i = 0; i < Nfi; i++) {
             matrices.add(null);
         }
 
@@ -500,9 +506,10 @@ public class Main {
     static int[] pspGenerator(int s, int d, int[] pol) { // Генератор псевдослучайно последовательности (ПСП)
         int period = (int) Math.pow(2,d) - 1; // период повторений ПСП
         int[] polynomial = pol;
+        int length = (int) Math.pow(2,d);
 
-        int[] randomSeq = new int[1024];
-        int[] rBin = new int[10];
+        int[] randomSeq = new int[length];
+        int[] rBin = new int[pol.length];
 
         for (int i = 0; i < period; i++) {
             if (i == 0) {

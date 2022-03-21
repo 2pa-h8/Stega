@@ -61,13 +61,13 @@ public class Main {
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-       int[] polynomial = {1, 1, 1, 1, 1, 1, 1, 0, 0, 1};
-//       int[] polynomial = Polynomial.getPoly(11);
+//       int[] polynomial = {1, 1, 1, 1, 1, 1, 1, 0, 0, 1};
+       int[] polynomial = Polynomial.getPoly(11);
 
         System.out.println(polynomial.length);
         log.info("Полином : {}", Arrays.toString(polynomial));
 
-        d = log(Nfi, 2);
+        d = log(2048, 2);
 
         log.info("Степень полинома d : {}", d);
 
@@ -169,10 +169,10 @@ public class Main {
 //        System.out.println(mResult.length);
 
 
-
-        watermark.recover(mResult);
-        watermark.saveImage(SAVED_LOCATION);
-        watermark.showImage();
+//
+//        watermark.recover(mResult);
+//        watermark.saveImage(SAVED_LOCATION);
+//        watermark.showImage();
     }
 
     /*
@@ -497,9 +497,9 @@ public class Main {
         return result;
     }
 
-    static int b2d(int[] x) {
+    static int b2d(int[] x, int length) {
         int result = 0;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < length; i++) {
             result += x[i] * Math.pow(2, i);
         }
         return result;
@@ -538,7 +538,7 @@ public class Main {
                     }
                 }
 
-                randomSeq[i] = b2d(rBin);
+                randomSeq[i] = b2d(rBin, polyLength);
             }
         }
 

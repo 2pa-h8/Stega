@@ -2,7 +2,8 @@ package com.project;
 
 import com.project.image.Picture;
 import com.project.image.Watermark;
-import com.project.matrix.MatrixUtil;
+import com.project.util.MatrixUtil;
+import com.project.util.Polynomial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,8 +61,10 @@ public class Main {
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-        int[] polynomial = {1, 1, 1, 1, 1, 1, 1, 0, 0, 1};
+       int[] polynomial = {1, 1, 1, 1, 1, 1, 1, 0, 0, 1};
+//       int[] polynomial = Polynomial.getPoly(11);
 
+        System.out.println(polynomial.length);
         log.info("Полином : {}", Arrays.toString(polynomial));
 
         d = log(Nfi, 2);
@@ -92,7 +95,7 @@ public class Main {
 
         // Вывод одного из элементов матрицы
 
-        //Arrays.stream(matricesF.get(110)).map(Arrays::toString).forEach(System.out::println);
+        //Arrays.stream(matricesF.get(55)).map(Arrays::toString).forEach(System.out::println);
 
         // --------------------------------------------- 6 ---------------------------------------------
         // Расчет степени ортогональности сигнала контейнера к базисным функциям
@@ -123,7 +126,7 @@ public class Main {
 
         int[][] E = modulation(X_ORIGINAL, Y_ORIGINAL, arrPixelsWatermark, matricesF);
 
-        Arrays.stream(E).map(Arrays::toString).forEach(System.out::println);
+        //Arrays.stream(E).map(Arrays::toString).forEach(System.out::println);
 
         log.info("Размер модулированного сообщения E : {} x {}", E.length, E.length);
 
@@ -485,10 +488,9 @@ public class Main {
     }
 
     // Перевод из 10-й в 2-ю
-    static int[] d2b(int x) { // здесь нужно добавить корретную проверку на знак
-        int[] result = new int[10];
-        int sign = x >= 0 ? 1 : -1;
-        for (int i = 0; i < 10; i++) {
+    static int[] d2b(int x, int length) { // здесь нужно добавить корретную проверку на знак
+        int[] result = new int[length];
+        for (int i = 0; i < length; i++) {
             result[i] = Math.abs(x) % 2;
             x = (int) Math.floor(Math.abs(x)/2);
         }
@@ -503,31 +505,32 @@ public class Main {
         return result;
     }
 
-    static int[] pspGenerator(int s, int d, int[] pol) { // Генератор псевдослучайно последовательности (ПСП)
+    static int[] pspGenerator(int s, int d, int[] poly) { // Генератор псевдослучайно последовательности (ПСП)
         int period = (int) Math.pow(2,d) - 1; // период повторений ПСП
-        int[] polynomial = pol;
         int length = (int) Math.pow(2,d);
 
+        int polyLength = poly.length;
+
         int[] randomSeq = new int[length];
-        int[] rBin = new int[pol.length];
+        int[] rBin = new int[polyLength];
 
         for (int i = 0; i < period; i++) {
             if (i == 0) {
                 randomSeq[i] = s;
-                rBin = d2b(randomSeq[i]);
+                rBin = d2b(randomSeq[i], polyLength);
             } else {
-                int[] tempArr = new int[10];
+                int[] tempArr = new int[polyLength];
                 int bit = 0;
 
-                for (int j = 0; j < 10; j++) {
-                    if (polynomial[j] == 1) {
+                for (int j = 0; j < polyLength; j++) {
+                    if (poly[j] == 1) {
                         bit = rBin[j] ^ bit;
                     }
                 }
 
-                System.arraycopy(rBin, 0, tempArr, 0, 10);
+                System.arraycopy(rBin, 0, tempArr, 0, polyLength);
 
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < polyLength; j++) {
                     if (j > 0) {
                         rBin[j] = tempArr[j-1];
                     } else {

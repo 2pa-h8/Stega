@@ -1,4 +1,4 @@
-package com.project.matrix;
+package com.project.util;
 
 public class MatrixUtil {
     public int[][] add(int[][] A, int[][] B) {

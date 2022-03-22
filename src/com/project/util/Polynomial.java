@@ -12,8 +12,8 @@ public class Polynomial {
     final static int[] p9 =  {1,1,1,1,1,0,1,0,0};
     final static int[] p10 = {0,0,1,1,1,1,1,1,1,1}; //
     final static int[] p11 = {1,1,1,1,1,1,0,1,0,0,1}; //
-    final static int[] p12 = {1,1,1,1,1,1,0,1,1,1,0,1};
-    final static int[] p13 = {1,0,0,0,1,0,1,0,1,1,0,0,0};
+    final static int[] p12 = {1,0,1,1,1,0,1,1,1,1,1,1}; //
+    final static int[] p13 = {1,1,1,1,1,0,1,0,1,0,0,0,1}; //
     final static int[] p14 = {1,0,0,1,0,0,0,0,1,0,0,0,0,1};
     final static int[] p15 = {1,0,0,0,0,1,0,0,0,0,1,0,0,0,1};
     final static int[] p16 = {1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0};

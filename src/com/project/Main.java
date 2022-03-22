@@ -25,7 +25,7 @@ public class Main {
         MatrixUtil matrixUtil = new MatrixUtil();
 
         Picture originalImage = new Picture("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\picture_compress_128x128.bmp");
-        Watermark watermark = new Watermark("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\watermark_32x32.bmp");
+        Watermark watermark = new Watermark("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\qr.bmp");
         // Watermark watermark = new Watermark("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\test.bmp");
 
         final int X_ORIGINAL = originalImage.getWidth(); // 128
@@ -66,8 +66,6 @@ public class Main {
         log.info("Степень полинома d : {}", d);
 
         int[] polynomial = Polynomial.getPoly(d);
-
-        System.out.println(polynomial.length);
 
         log.info("Полином : {}", Arrays.toString(polynomial));
 
@@ -168,11 +166,9 @@ public class Main {
 //        System.out.println(Arrays.toString(mResult));
 //        System.out.println(mResult.length);
 
-
-//
-//        watermark.recover(mResult);
-//        watermark.saveImage(SAVED_LOCATION);
-//        watermark.showImage();
+        watermark.recover(mResult);
+        watermark.saveImage(SAVED_LOCATION);
+        watermark.showImage();
     }
 
     /*

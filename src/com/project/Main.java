@@ -2,7 +2,8 @@ package com.project;
 
 import com.project.image.Picture;
 import com.project.image.Watermark;
-import com.project.matrix.MatrixUtil;
+import com.project.util.MatrixUtil;
+import com.project.util.Polynomial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,33 +14,26 @@ public class Main {
     static Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws IOException {
-
-//        Picture originalImage = new Picture("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\picture_compress_128x128.bmp");
-//        // ! ВАЖНО цвз должна иметь в значениях пикселей только 2 числа - 255 и 0
-//
-//        Watermark watermark = new Watermark("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\watermark_32x32.bmp");
-
         final String SAVED_LOCATION = "C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\";
 
-        MatrixUtil matrixUtil = new MatrixUtil();
-
         Picture originalImage = new Picture("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\picture_compress_128x128.bmp");
-        Watermark watermark = new Watermark("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\watermark_32x32.bmp");
-        // Watermark watermark = new Watermark("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\test.bmp");
+        Watermark watermark = new Watermark("C:\\Users\\user\\Desktop\\Учеба\\Стеганография\\Курсовая\\qr.bmp");;
 
-        final int X_ORIGINAL = originalImage.getWidth(); // 128
-        final int Y_ORIGINAL = originalImage.getHeight(); // 128
-
-        final int X_WATERMARK = watermark.getWidth(); // 32
-        final int Y_WATERMARK = watermark.getHeight(); // 32
-
-
-//        watermark.saveImage(SAVED_LOCATION);
-//        watermark.showImage();
+        // размеры оригинального изображения
+        final int X_ORIGINAL = originalImage.getWidth();
+        final int Y_ORIGINAL = originalImage.getHeight();
 
         log.info("Ширина оригинального изображения X_ORIGINAL : {}", X_ORIGINAL);
         log.info("Высота оригинального изображения Y_ORIGINAL : {}", Y_ORIGINAL);
 
+        // размеры ЦВЗ
+        final int X_WATERMARK = watermark.getWidth(); // 32
+        final int Y_WATERMARK = watermark.getHeight(); // 32
+
+        log.info("Ширина оригинального изображения X_ORIGINAL : {}", X_WATERMARK);
+        log.info("Высота оригинального изображения Y_ORIGINAL : {}", Y_WATERMARK);
+
+        // формирование массива ортогональных функций
         int[][] basicFunc = new int[X_ORIGINAL][Y_ORIGINAL];
         int d = -1;
 
@@ -53,20 +47,25 @@ public class Main {
 
         //Arrays.stream(basicFunc).map(Arrays::toString).forEach(System.out::println);
 
-        int Nfi = X_WATERMARK * Y_WATERMARK; // 1024
+        // Общее число базисных функций
+        int Nfi = X_WATERMARK * Y_WATERMARK;
+
         log.info("Общее число базисных функций Nfi : {}", Nfi);
 
+        // размерность значащего подмасива отдельной базисной функции
         int n = (int) Math.floor(Math.sqrt((X_ORIGINAL * Y_ORIGINAL)/Nfi));
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-        int[] polynomial = {1, 1, 1, 1, 1, 1, 1, 0, 0, 1};
-
-        log.info("Полином : {}", Arrays.toString(polynomial));
-
+        // степень полинома
         d = log(Nfi, 2);
 
         log.info("Степень полинома d : {}", d);
+
+        // выбор полинома в зависимости от d
+        int[] polynomial = Polynomial.getPoly(d);
+
+        log.info("Полином : {}", Arrays.toString(polynomial));
 
         int s = 55; // Начальное состаяние регистра s задается в виде произвольного числа
 
@@ -78,7 +77,6 @@ public class Main {
 
         log.info("Размер ПСП : {}", psp.length);
 
-//        Arrays.stream(result).map(Arrays::toString).forEach(System.out::println);
         // --------------------------------------------- 5 ---------------------------------------------
         // Встраивание
 
@@ -92,7 +90,7 @@ public class Main {
 
         // Вывод одного из элементов матрицы
 
-        //Arrays.stream(matricesF.get(110)).map(Arrays::toString).forEach(System.out::println);
+        //Arrays.stream(matricesF.get(55)).map(Arrays::toString).forEach(System.out::println);
 
         // --------------------------------------------- 6 ---------------------------------------------
         // Расчет степени ортогональности сигнала контейнера к базисным функциям
@@ -123,7 +121,7 @@ public class Main {
 
         int[][] E = modulation(X_ORIGINAL, Y_ORIGINAL, arrPixelsWatermark, matricesF);
 
-        Arrays.stream(E).map(Arrays::toString).forEach(System.out::println);
+        //Arrays.stream(E).map(Arrays::toString).forEach(System.out::println);
 
         log.info("Размер модулированного сообщения E : {} x {}", E.length, E.length);
 
@@ -133,7 +131,6 @@ public class Main {
         int Kg = calculateKg(n, deltaMax);
 
         log.info("Достаточные коэффициент усиления по мощности Kg : {}", Kg);
-
 
         // --------------------------------------------- 10 ---------------------------------------------
         // Нормирование массива контейнера
@@ -148,7 +145,7 @@ public class Main {
         // --------------------------------------------- 11 ---------------------------------------------
         // Формирование контейнера S = Cnorm + Kg * E
 
-        int[][] S = matrixUtil.add(cNorm, MatrixUtil.multiplyingMatrixByNumber(E, Kg));
+        int[][] S = MatrixUtil.add(cNorm, MatrixUtil.multiplyingMatrixByNumber(E, Kg));
 
 //       Arrays.stream(S).map(Arrays::toString).forEach(System.out::println);
 
@@ -161,11 +158,6 @@ public class Main {
                 Nfi,
                 S,
                 matricesF);
-
-//        System.out.println(Arrays.toString(mResult));
-//        System.out.println(mResult.length);
-
-
 
         watermark.recover(mResult);
         watermark.saveImage(SAVED_LOCATION);
@@ -220,7 +212,6 @@ public class Main {
 
         return cNorm;
     }
-
 
     /*
     Шаг № 9
@@ -311,11 +302,14 @@ public class Main {
             Arrays.fill(row, 0);
         }
 
-        // Заполнение массива послдедовательностью 0..127
-        ArrayList<Integer> list_128 = new ArrayList<>();
+        /* Заполнение массива послдедовательностью 0..X
+           Этот списко нужен для того, чтобы определить
+           строки, которые необходимо вычеркнуть */
+
+        ArrayList<Integer> removedList = new ArrayList<>();
         int k = 0;
         for (int i = 0; i < 128; i++) {
-            list_128.add(k);
+            removedList.add(k);
             k++;
         }
 
@@ -323,7 +317,7 @@ public class Main {
         int c2 = n - 1;
 
         for (int i = 1; i <= Nfi; i++) {
-            int[][] tempMatrix = copyMatrix(tesResult);
+            int[][] tempMatrix = MatrixUtil.copyMatrix(tesResult);
             int indexPsp = psp[i-1] - 1;
 
             int r1 = (n * (i - 1) + 1) % X - 1;
@@ -331,15 +325,15 @@ public class Main {
 
             /* Метод slice работает с массивами, поэтому переводим дапазон в массив.
                Метод принимает в качесве параметров массивы строк и столбцов,
-               которые нужно вычеркнуть.
-            */
-            int[] rangeColumns = removeRangeValues(list_128, c1, c2);
-            int[] rangeRows = removeRangeValues(list_128, r1, r2);
+               которые нужно вычеркнуть. */
+
+            int[] rangeColumns = MatrixUtil.removeRangeValues(removedList, c1, c2);
+            int[] rangeRows = MatrixUtil.removeRangeValues(removedList, r1, r2);
 
             // вырезание матрицы
-            int[][] submatrix = slice(basicFunc, rangeColumns, rangeRows);
+            int[][] submatrix = MatrixUtil.slice(basicFunc, rangeColumns, rangeRows);
             // встраивание матрицы
-            int[][] result = putregion(tempMatrix, submatrix, r1, c1);
+            int[][] result = MatrixUtil.putregion(tempMatrix, submatrix, r1, c1);
 
             matrices.set(indexPsp, result);
 
@@ -352,182 +346,55 @@ public class Main {
         return matrices;
     }
 
-    /*
-    Копирование матрицы. Нужно для корректного формирования списка матриц,
-    в который встроены (-1, 1) блоки.
-    */
-    static int[][] copyMatrix(int[][] matrix) {
-        int [][] myInt = new int[matrix.length][];
-
-        for(int i = 0; i < matrix.length; i++) {
-            int[] aMatrix = matrix[i];
-            int   aLength = aMatrix.length;
-            myInt[i] = new int[aLength];
-            System.arraycopy(aMatrix, 0, myInt[i], 0, aLength);
-        }
-
-        return myInt;
-    }
-
-    static int[] removeRangeValues(ArrayList<Integer> list, int a, int b) {
-        ArrayList<Integer> temp =  new ArrayList<>(list);
-
-        if (b >= a) {
-            temp.subList(a, b + 1).clear();
-        }
-
-        int[] result = temp.stream()
-                .mapToInt(Integer::intValue)
-                .toArray();
-
-        return result;
-    }
-
-    public static int [][] slice(int [][] matr, int [] rows, int [] cols) {
-        int iCol = (matr[0]).length;
-        int iRow = matr.length;
-
-        int c    = cols.length;
-        int r    = rows.length;
-
-        int oCol = iCol-c;
-        int oRow = iRow-r;
-
-        int [][] res = new int [oRow] [oCol];
-
-        int i,j,k,ii,jj,flgc,flgr;
-
-        ii=0;
-
-        for (i=0; i<iRow; i++)
-        {
-            flgr=0;
-
-            for (k=0; k<r; k++)
-            {
-                if (i==rows[k])
-                {
-                    flgr=1;
-                    break;
-                }
-            }
-
-            if (flgr == 0)
-
-            {
-                jj=0;
-                for (j=0; j<iCol; j++)
-                {
-                    flgc=0;
-
-                    for (k=0; k<c; k++)
-                    {
-                        if (cols[k]==j)
-                        {
-                            flgc=1;
-                            break;
-                        }
-                    }
-
-                    if (flgc==0)
-
-                    {
-                        res[ii][jj]=matr[i][j];
-                        jj++;
-                    }
-
-                }
-                ii++;
-            }
-        }
-        return res;
-    }
-
-    static int[][] putregion(int[][] m1, int[][] m2, int row, int col) { // встраивание одной матрицы в другую
-        int m2Rows = m2.length;
-        int m2Columns = m2[0].length;
-        int count = 0;
-
-        int[] m2Arr = matrixToArray(m2); // преобразование встраеваемой матрицы в массив
-
-        for (int i = row; i < row + m2Rows; i++) {
-            for (int j = col; j < col + m2Columns; j++) {
-                m1[i][j] = m2Arr[count];
-                if (count < m2Arr.length - 1) {
-                    count++;
-                }
-            }
-        }
-
-        return m1;
-    }
-
-    static int[] matrixToArray(int[][] matrix) { // добавить проверку
-        int row = matrix.length;
-        int col = matrix[0].length;
-        int k = 0;
-        int arrLength =  row * col;
-        int[] result = new int[arrLength];
-
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                result[k] = matrix[i][j];
-                k++;
-            }
-        }
-
-        return result;
-    }
-
     // Логарифмирование по основанию
     static int log(int x, int base) {
         return (int) (Math.log(x) / Math.log(base));
     }
 
     // Перевод из 10-й в 2-ю
-    static int[] d2b(int x) { // здесь нужно добавить корретную проверку на знак
-        int[] result = new int[10];
-        int sign = x >= 0 ? 1 : -1;
-        for (int i = 0; i < 10; i++) {
+    static int[] d2b(int x, int length) { // здесь нужно добавить корретную проверку на знак
+        int[] result = new int[length];
+        for (int i = 0; i < length; i++) {
             result[i] = Math.abs(x) % 2;
             x = (int) Math.floor(Math.abs(x)/2);
         }
         return result;
     }
 
-    static int b2d(int[] x) {
+    static int b2d(int[] x, int length) {
         int result = 0;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < length; i++) {
             result += x[i] * Math.pow(2, i);
         }
         return result;
     }
 
-    static int[] pspGenerator(int s, int d, int[] pol) { // Генератор псевдослучайно последовательности (ПСП)
+    static int[] pspGenerator(int s, int d, int[] poly) { // Генератор псевдослучайно последовательности (ПСП)
         int period = (int) Math.pow(2,d) - 1; // период повторений ПСП
-        int[] polynomial = pol;
         int length = (int) Math.pow(2,d);
 
+        int polyLength = poly.length;
+
         int[] randomSeq = new int[length];
-        int[] rBin = new int[pol.length];
+        int[] rBin = new int[polyLength];
 
         for (int i = 0; i < period; i++) {
             if (i == 0) {
                 randomSeq[i] = s;
-                rBin = d2b(randomSeq[i]);
+                rBin = d2b(randomSeq[i], polyLength);
             } else {
-                int[] tempArr = new int[10];
+                int[] tempArr = new int[polyLength];
                 int bit = 0;
 
-                for (int j = 0; j < 10; j++) {
-                    if (polynomial[j] == 1) {
+                for (int j = 0; j < polyLength; j++) {
+                    if (poly[j] == 1) {
                         bit = rBin[j] ^ bit;
                     }
                 }
 
-                System.arraycopy(rBin, 0, tempArr, 0, 10);
+                System.arraycopy(rBin, 0, tempArr, 0, polyLength);
 
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < polyLength; j++) {
                     if (j > 0) {
                         rBin[j] = tempArr[j-1];
                     } else {
@@ -535,7 +402,7 @@ public class Main {
                     }
                 }
 
-                randomSeq[i] = b2d(rBin);
+                randomSeq[i] = b2d(rBin, polyLength);
             }
         }
 

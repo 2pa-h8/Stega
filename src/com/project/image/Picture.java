@@ -25,6 +25,11 @@ public class Picture {
 
     private File savedImage;
 
+    public Picture(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
     public Picture(String path) {
         try {
             sourceImage = ImageIO.read(new File(path));

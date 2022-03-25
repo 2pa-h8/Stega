@@ -83,7 +83,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
         // Формирование контейнера S = Cnorm + Kg * E
         int[][] S = MatrixUtil.add(cNorm, MatrixUtil.multiplyingMatrixByNumber(E, Kg));
 
-        originalImage.setColorComponent(S, Picture.BLUE_CHANEL);
+        originalImage.setColorComponent(S, chanel);
 
         return originalImage;
     }

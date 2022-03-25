@@ -3,22 +3,22 @@ package com.project.util;
 public class Polynomial {
     final static int[] p1 =  {1};
     final static int[] p2 =  {1,1};
-    final static int[] p3 =  {1,1,0};
-    final static int[] p4 =  {1,0,1,0};
-    final static int[] p5 =  {1,1,1,0,1};
-    final static int[] p6 =  {1,0,0,0,0,1};
-    final static int[] p7 =  {1,0,1,0,0,1,1};
-    final static int[] p8 =  {1,0,0,0,1,1,0,1};
-    final static int[] p9 =  {1,1,1,1,1,0,1,0,0};
-    final static int[] p10 = {0,0,1,1,1,1,1,1,1,1}; //
-    final static int[] p11 = {1,1,1,1,1,1,0,1,0,0,1}; //
-    final static int[] p12 = {1,0,1,1,1,0,1,1,1,1,1,1}; //
-    final static int[] p13 = {1,1,1,1,1,0,1,0,1,0,0,0,1}; //
-    final static int[] p14 = {1,0,0,1,0,0,0,0,1,0,0,0,0,1};
-    final static int[] p15 = {1,0,0,0,0,1,0,0,0,0,1,0,0,0,1};
-    final static int[] p16 = {1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0};
-    final static int[] p17 = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0};
-    final static int[] p18 = {1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1};
+    final static int[] p3 =  {1,0,1};
+    final static int[] p4 =  {1,0,0,1};
+    final static int[] p5 =  {0,1,0,0,1};
+    final static int[] p6 =  {1,1,0,0,1,1};
+    final static int[] p7 =  {0,0,1,0,0,0,1};
+    final static int[] p8 =  {0,1,1,1,0,0,0,1};
+    final static int[] p9 =  {0,0,1,1,0,1,0,0,1};
+    final static int[] p10 = {0,0,1,1,1,1,1,1,1,1};
+    final static int[] p11 = {1,1,1,1,1,1,0,1,0,0,1};
+    final static int[] p12 = {1,0,1,1,1,0,1,1,1,1,1,1};
+    final static int[] p13 = {1,1,1,1,1,0,1,0,1,0,0,0,1};
+    final static int[] p14 = {1,0,1,1,0,1,1,0,1,1,0,0,0,1};
+    final static int[] p15 = {1,1,1,0,0,1,1,0,0,0,0,0,0,0,1};
+    final static int[] p16 = {0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1};
+    final static int[] p17 = {0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
+    final static int[] p18 = {0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1};
 
     public static int[] getPoly(int d) {
         return switch (d) {

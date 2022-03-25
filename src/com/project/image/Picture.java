@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Picture {
-    final static int BMP_IMAGE_TYPE = BufferedImage.TYPE_INT_RGB;
+    final static int BMP_IMAGE_TYPE = BufferedImage.TYPE_3BYTE_BGR;
     final String IMAGE_FORMAT = "bmp";
 
     public final static String RED_CHANEL = "red";
@@ -24,6 +24,11 @@ public class Picture {
     BufferedImage sourceImage;
 
     private File savedImage;
+
+    public Picture(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 
     public Picture(String path) {
         try {

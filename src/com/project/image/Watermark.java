@@ -4,18 +4,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Watermark extends Picture {
+    public Watermark(int width, int height) {
+        super(height, width);
+    }
     public Watermark(String path) {
         super(path);
-    }
-
-    public int[] testFillContainer() {
-        int height = getHeight();
-        int width = getWidth();
-        int[] res = new int[height * width];
-        for (int i = 0; i < res.length; i++) {
-            res[i] = i % 2 == 0 ? 1 : 0;
-        }
-        return res;
     }
 
     public int[] getBlackWhitePixelsArr() {

@@ -9,7 +9,6 @@ import java.util.Random;
 
 public class Picture {
     final static int BMP_IMAGE_TYPE = BufferedImage.TYPE_3BYTE_BGR;
-//    final static int BMP_IMAGE_TYPE = BufferedImage.TYPE_INT_RGB;
     final String IMAGE_FORMAT = "bmp";
 
     public final static String RED_CHANEL = "red";

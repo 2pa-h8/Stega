@@ -20,22 +20,22 @@
                         <Font size="27.0" />
                     </font>
                 </Label>
-            <Button fx:id="embedWatermarkBtn" mnemonicParsing="false" text="Встроить ЦВЗ в изображение">
+            <Button fx:id="embedWatermarkBtn" mnemonicParsing="false" onAction="#onEmbedWatermarkBtn" text="Встроить ЦВЗ в изображение">
                <HBox.margin>
                   <Insets left="20.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Button>
-                <Button fx:id="readWatermarkBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="153.0" text="Прочитать ЦВЗ">
+                <Button fx:id="readWatermarkBtn" mnemonicParsing="false" onAction="#onReadWatermarkBtn" prefHeight="25.0" prefWidth="153.0" text="Прочитать ЦВЗ">
                     <HBox.margin>
                         <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="saveEmbeddingResultBtn" mnemonicParsing="false" text="Сохранить результат встраивания">
+                <Button fx:id="saveEmbeddingResultBtn" mnemonicParsing="false" onAction="#onSaveEmbeddingResultBtn" text="Сохранить результат встраивания">
                     <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-            <Button fx:id="saveReadResultBtn" mnemonicParsing="false" text="Сохранить результат чтения">
+            <Button fx:id="saveReadResultBtn" mnemonicParsing="false" onAction="#onSaveReadResultBtn" text="Сохранить результат чтения">
                <HBox.margin>
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>
@@ -57,19 +57,9 @@
                   <Insets left="20.0" top="15.0" />
                </VBox.margin>
             </Button>
-            <Label text="Задайте стратовую позицию псевдослучайной последовательности (ПСП)">
-               <VBox.margin>
-                  <Insets left="20.0" top="10.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="startPspTextField1" maxHeight="-Infinity" maxWidth="-Infinity">
-               <VBox.margin>
-                  <Insets left="20.0" top="10.0" />
-               </VBox.margin>
-            </TextField>
               <ImageView fx:id="originalImageView" pickOnBounds="true">
                <VBox.margin>
-                  <Insets bottom="10.0" left="160.0" top="30.0" />
+                  <Insets bottom="10.0" left="130.0" top="60.0" />
                </VBox.margin>
             </ImageView>
          </children>
@@ -89,16 +79,47 @@
                   <Insets left="20.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Label text="Задайте стратовую позицию псевдослучайной последовательности (ПСП)" wrapText="true">
+            <Label text="Стартовая позиция псевдослучайной последовательности (ПСП)" wrapText="true">
                <VBox.margin>
                   <Insets bottom="10.0" left="20.0" top="10.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="startPspTextField2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+            <TextField fx:id="startPspTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                <VBox.margin>
                   <Insets left="20.0" />
                </VBox.margin>
             </TextField>
+            <HBox prefHeight="36.0" prefWidth="683.0">
+               <children>
+                  <Label text="Ширина ЦВЗ">
+                     <HBox.margin>
+                        <Insets left="20.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label text="Высота ЦВЗ">
+                     <HBox.margin>
+                        <Insets left="100.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="28.0" prefWidth="683.0">
+               <children>
+                  <TextField fx:id="watermarkWidth">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <TextField fx:id="watermarkHeight">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
             <ImageView fx:id="filledImageView" pickOnBounds="true">
                <VBox.margin>
                   <Insets left="300.0" top="30.0" />
@@ -123,12 +144,12 @@
             </Button>
             <ImageView fx:id="watermarkOriginalView" pickOnBounds="true" preserveRatio="true">
                <VBox.margin>
-                  <Insets left="200.0" top="30.0" />
+                  <Insets left="170.0" top="80.0" />
                </VBox.margin>
             </ImageView>
          </children>
       </VBox>
-      <VBox layoutX="464.0" layoutY="420.0" prefHeight="200.0" prefWidth="305.0">
+      <VBox layoutX="464.0" layoutY="430.0" prefHeight="297.0" prefWidth="305.0">
          <children>
             <Label text="Результат встраивания" textFill="#02a7ff">
                <font>
@@ -140,12 +161,12 @@
             </Label>
             <ImageView fx:id="embeddingResultView" pickOnBounds="true">
                <VBox.margin>
-                  <Insets left="150.0" top="30.0" />
+                  <Insets left="100.0" top="60.0" />
                </VBox.margin>
             </ImageView>
          </children>
       </VBox>
-      <VBox layoutX="857.0" layoutY="420.0" prefHeight="200.0" prefWidth="261.0">
+      <VBox layoutX="857.0" layoutY="430.0" prefHeight="297.0" prefWidth="261.0">
          <children>
             <Label text="Результат чтения" textFill="#02a7ff">
                <font>
@@ -157,7 +178,7 @@
             </Label>
             <ImageView fx:id="readingResultView" pickOnBounds="true">
                <VBox.margin>
-                  <Insets left="130.0" top="30.0" />
+                  <Insets left="110.0" top="100.0" />
                </VBox.margin>
             </ImageView>
          </children>

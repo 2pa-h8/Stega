@@ -13,7 +13,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     static Logger log = LoggerFactory.getLogger(SpreadSpectrum.class);
 
     @Override
-    public Picture encode(Picture originalImage, Watermark watermark) throws Exception {
+    public Picture encode(Picture originalImage, Watermark watermark, int startOfSequencePSP) throws Exception {
         log.info("---------------------------  КОДИРОВАНИЕ  ---------------------------");
         // размеры оригинального изображения
         int X_ORIGINAL = originalImage.getWidth();
@@ -34,19 +34,16 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         log.info("Общее число базисных функций Nfi : {}", Nfi);
 
-        int s = 55;
-
         // размерность значащего подмасива отдельной базисной функции
         int n = (int) Math.floor(Math.sqrt((X_ORIGINAL * Y_ORIGINAL)/Nfi));
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-        List<int[][]> f = getArrayOfBasicFunctions(X_ORIGINAL,
+        List<int[][]> f = getArrayOfBasicFunctions(
+                X_ORIGINAL,
                 Y_ORIGINAL,
-                X_WATERMARK,
-                Y_WATERMARK,
                 Nfi,
-                s,
+                startOfSequencePSP,
                 n
         );
 
@@ -89,7 +86,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     }
 
     @Override
-    public Picture decode(Picture filledImage, int X_WATERMARK, int Y_WATERMARK, int startOfSequencePSP) throws Exception {
+    public Watermark decode(Picture filledImage, int X_WATERMARK, int Y_WATERMARK, int startOfSequencePSP) throws Exception {
         log.info("--------------------------- ДЕКОДИРОВАНИЕ ---------------------------");
 
         int X_ORIGINAL = filledImage.getWidth();
@@ -99,8 +96,6 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
         log.info("Высота заполненного контейнера Y_ORIGINAL : {}", Y_ORIGINAL);
         log.info("Ширина извлекаемого ЦВЗ X_WATERMARK : {}", X_WATERMARK);
         log.info("Высота извлекаемого ЦВЗ Y_WATERMARK : {}", Y_WATERMARK);
-
-        log.info("Начальное состаяние регистра s : {}", startOfSequencePSP);
 
         String chanel = Picture.BLUE_CHANEL;
         int[][] colorComponents = filledImage.getColorComponent(chanel);
@@ -117,10 +112,9 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-        List<int[][]> f = getArrayOfBasicFunctions(X_ORIGINAL,
+        List<int[][]> f = getArrayOfBasicFunctions(
+                X_ORIGINAL,
                 Y_ORIGINAL,
-                X_WATERMARK,
-                Y_WATERMARK,
                 Nfi,
                 startOfSequencePSP,
                 n
@@ -248,7 +242,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
         return result;
     }
 
-    static List<int[][]> getArrayOfBasicFunctions(int X_ORIGINAL, int Y_ORIGINAL, int X_WATERMARK, int Y_WATERMARK, int Nfi, int s, int n) {
+    static List<int[][]> getArrayOfBasicFunctions(int X_ORIGINAL, int Y_ORIGINAL, int Nfi, int s, int n) {
         if (s >= Nfi) {
             return null; // Исключение
         }

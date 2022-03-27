@@ -5,7 +5,7 @@ import com.project.image.Watermark;
 
 public abstract class SteganographyAlgorithm {
 
-    public abstract Picture encode(Picture originalImage, Watermark watermark) throws Exception;
+    public abstract Picture encode(Picture originalImage, Watermark watermark, int startOfSequencePSP) throws Exception;
 
-    public abstract Picture decode(Picture encodedImage, int X_WATERMARK, int Y_WATERMARK, int startOfSequencePSP) throws Exception;
+    public abstract Watermark decode(Picture encodedImage, int X_WATERMARK, int Y_WATERMARK, int startOfSequencePSP) throws Exception;
 }

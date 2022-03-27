@@ -144,7 +144,7 @@
             </HBox>
             <HBox prefHeight="221.0" prefWidth="683.0">
                <children>
-                  <ImageView fx:id="embaddingResultView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true">
+                  <ImageView fx:id="embeddingResultView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true">
                      <HBox.margin>
                         <Insets left="60.0" top="20.0" />
                      </HBox.margin>

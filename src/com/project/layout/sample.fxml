@@ -74,7 +74,7 @@
             </ImageView>
          </children>
       </VBox>
-      <VBox layoutX="464.0" layoutY="60.0" prefHeight="200.0" prefWidth="683.0">
+      <VBox layoutX="464.0" layoutY="60.0" prefHeight="355.0" prefWidth="683.0">
          <children>
             <Label prefHeight="23.0" prefWidth="370.0" text="Прочитать ЦВЗ из изображения" textFill="#02a7ff">
                <VBox.margin>
@@ -84,7 +84,7 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button fx:id="selectFilledImageBtn" mnemonicParsing="false" text="Выбрать заполненное изображение">
+            <Button fx:id="selectFilledImageBtn" mnemonicParsing="false" onAction="#onSelectFilledImageBtn" text="Выбрать заполненное изображение">
                <VBox.margin>
                   <Insets left="20.0" top="10.0" />
                </VBox.margin>
@@ -99,9 +99,9 @@
                   <Insets left="20.0" />
                </VBox.margin>
             </TextField>
-            <ImageView fx:id="watermarkReadView" fitHeight="29.0" fitWidth="200.0" pickOnBounds="true">
+            <ImageView fx:id="filledImageView" pickOnBounds="true">
                <VBox.margin>
-                  <Insets left="200.0" top="15.0" />
+                  <Insets left="300.0" top="30.0" />
                </VBox.margin>
             </ImageView>
          </children>

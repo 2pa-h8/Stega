@@ -26,7 +26,7 @@ public class Controller {
 
     @FXML private ImageView originalImageView = new ImageView();
     @FXML private ImageView watermarkOriginalView = new ImageView();
-    @FXML private ImageView watermarkReadView = new ImageView();
+    @FXML private ImageView filledImageView = new ImageView();
     @FXML private ImageView embeddingResultView = new ImageView();
     @FXML private ImageView readingResultView = new ImageView();
 
@@ -40,20 +40,25 @@ public class Controller {
     private String watermarkImageFileName;
     private File watermarkImageFile;
 
+    private Image filledImage;
+    private String filledImagePath;
+    private String filledImageFileName;
+    private File filledImageFile;
+
+
+
     @FXML private Stage stage;
 
     public void init(Stage primaryStage) {
         stage = primaryStage;
 
-        setButtonsDisabled(embedWatermarkBtn, readWatermarkBtn, saveReadResultBtn);
+        setButtonsDisabled(embedWatermarkBtn, readWatermarkBtn, saveReadResultBtn, saveEmbeddingResultBtn);
     }
 
     // * Выбрать оригинальное изображение *
     public void onSelectOriginalImageBtn(ActionEvent event) {
         File file = chooseImage("Выбирете файл с оригинальным изображением");
-        /* Showing an image */
         if (file != null) {
-            /* Saving file name and directory */
             originalImageFileName = file.getName();
             originalImage = new Image(file.toURI().toString());
             originalImageView.setImage(originalImage);
@@ -64,10 +69,19 @@ public class Controller {
     public void onSelectWatermarkBtn(ActionEvent event) {
         File file = chooseImage("Выбирете файл с цифровым водяным знаком (ЦВЗ)");
         if (file != null) {
-            /* Saving file name and directory */
             watermarkImageFileName = file.getName();
             watermarkImage = new Image(file.toURI().toString());
             watermarkOriginalView.setImage(watermarkImage);
+        }
+    }
+
+    // * Выбрать заполненное изображение *
+    public void onSelectFilledImageBtn(ActionEvent event) {
+        File file = chooseImage("Выбирете файл с заполненным изображением");
+        if (file != null) {
+            filledImageFileName = file.getName();
+            filledImage = new Image(file.toURI().toString());
+            filledImageView.setImage(filledImage);
         }
     }
 
@@ -91,7 +105,7 @@ public class Controller {
     private void clearImageWidgets() {
         originalImageView.setImage(null);
         watermarkOriginalView.setImage(null);
-        watermarkReadView.setImage(null);
+        filledImageView.setImage(null);
         embeddingResultView.setImage(null);
         readingResultView.setImage(null);
     }

@@ -23,26 +23,8 @@ public class MatrixUtil {
         return result;
     }
 
-    static int[][] multiplication(int[][] firstMatrix, int[][] secondMatrix) {
-        int[][] result = new int[firstMatrix.length][secondMatrix[0].length];
 
-        for (int row = 0; row < result.length; row++) {
-            for (int col = 0; col < result[row].length; col++) {
-                result[row][col] = multiplyMatricesCell(firstMatrix, secondMatrix, row, col);
-            }
-        }
-        return result;
-    }
-
-    public static int multiplyMatricesCell(int[][] firstMatrix, int[][] secondMatrix, int row, int col) {
-        int cell = 0;
-        for (int i = 0; i < secondMatrix.length; i++) {
-            cell += firstMatrix[row][i] * secondMatrix[i][col];
-        }
-        return cell;
-    }
-
-    public static int[] matrixToArray(int[][] matrix) { // добавить проверку
+    public static int[] matrixToArray(int[][] matrix) {
         int row = matrix.length;
         int col = matrix[0].length;
         int k = 0;
@@ -78,6 +60,7 @@ public class MatrixUtil {
         return m1;
     }
 
+    // вырезание участка матрицы
     public static int [][] slice(int [][] matr, int [] rows, int [] cols) {
         int iCol = (matr[0]).length;
         int iRow = matr.length;

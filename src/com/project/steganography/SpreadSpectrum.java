@@ -140,7 +140,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     // Извлечение ЦВЗ из контейнера
 
     static int[] extraction(int X, int Y, int Nfi, int[][] S, List<int[][]> matricesF) {
-        int[] result = new int[Nfi];
+        int[] bitPixelsArr = new int[Nfi];
         Random rnd = new Random();
         int m = 0;
 
@@ -153,17 +153,17 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
             }
 
             if (m > 0) {
-                result[i] = 1;
+                bitPixelsArr[i] = 1;
             } else if (m < 0) {
-                result[i] = 0;
+                bitPixelsArr[i] = 0;
             } else {
-                result[i] = Math.round(rnd.nextFloat());
+                bitPixelsArr[i] = Math.round(rnd.nextFloat());
             }
 
             m = 0;
         }
 
-        return result;
+        return bitPixelsArr;
     }
 
     // Вычисление степени ортогональности
@@ -216,7 +216,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     // М Модуляция полученного массива базисными функциями
     static int[][] modulation(int X, int Y, int[] M, List<int[][]> f) {
         int mLength = M.length;
-        int[][] result = new int[X][Y];
+        int[][] modResult = new int[X][Y];
         ArrayList<Integer> mVecBin = new ArrayList<>();
 
         // замена 0 на -1 в массиве значений ЦВЗ
@@ -235,11 +235,11 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
                     int[][] element = f.get(i);
                     sum += mVecBin.get(i) * element[x][y];
                 }
-                result[x][y] = sum;
+                modResult[x][y] = sum;
             }
         }
 
-        return result;
+        return modResult;
     }
 
     static List<int[][]> getArrayOfBasicFunctions(int X_ORIGINAL, int Y_ORIGINAL, int Nfi, int s, int n) {
@@ -290,11 +290,11 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
     // Формирование массива базисных функиций
     static List<int[][]> formationOfArrayOfBasisFunctions(int[][] basicFunc, int[] psp, int n, int X, int Y, int Nfi) {
-        List<int[][]> matrices = new ArrayList<>();
+        List<int[][]> f = new ArrayList<>();
 
         // подготовка контейнера - заполнение
         for (int i = 0; i < Nfi; i++) {
-            matrices.add(null);
+            f.add(null);
         }
 
         // Формирование матрицу на основе матрицы baseFunc и заполнение 0
@@ -310,7 +310,8 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         ArrayList<Integer> removedList = new ArrayList<>();
         int k = 0;
-        for (int i = 0; i < 128; i++) {
+
+        for (int i = 0; i < X; i++) {
             removedList.add(k);
             k++;
         }
@@ -338,12 +339,12 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
             // вырезание матрицы
             int[][] submatrix = MatrixUtil.slice(basicFunc, rangeColumns, rangeRows);
             // встраивание матрицы
-            int[][] result = MatrixUtil.putregion(tempMatrix, submatrix, r1, c1);
+            int[][] resultPutregion = MatrixUtil.putregion(tempMatrix, submatrix, r1, c1);
 
             /* установка матрицы в результирующий контейнер,
                в качестве индекса контейнера выступает значение
                псп */
-            matrices.set(indexPsp, result);
+            f.set(indexPsp, resultPutregion);
 
             if (r2 == X - 1) {
                 c1 += n;
@@ -351,7 +352,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
             }
         }
 
-        return matrices;
+        return f;
     }
 
     // Генератор псевдослучайно последовательности (ПСП)
@@ -404,7 +405,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     }
 
     // Перевод из 10-й в 2-ю систему счисления
-    static int[] d2b(int x, int length) { // здесь нужно добавить корретную проверку на знак
+    static int[] d2b(int x, int length) {
         int[] result = new int[length];
         for (int i = 0; i < length; i++) {
             result[i] = Math.abs(x) % 2;

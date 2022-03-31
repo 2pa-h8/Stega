@@ -14,7 +14,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
     @Override
     public Picture encode(Picture originalImage, Watermark watermark, int startOfSequencePSP) throws Exception {
-        log.info("---------------------------  ВСТРИИВАНИЕ  ---------------------------");
+        log.info("---------------------------  ВСТРАИВАНИЕ  ---------------------------");
         // размеры оригинального изображения
         int X_ORIGINAL = originalImage.getWidth();
         int Y_ORIGINAL = originalImage.getHeight();

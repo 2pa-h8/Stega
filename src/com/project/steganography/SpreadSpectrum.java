@@ -14,7 +14,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
     @Override
     public Picture encode(Picture originalImage, Watermark watermark, int startOfSequencePSP) throws Exception {
-        log.info("---------------------------  КОДИРОВАНИЕ  ---------------------------");
+        log.info("---------------------------  ВСТРИИВАНИЕ  ---------------------------");
         // размеры оригинального изображения
         int X_ORIGINAL = originalImage.getWidth();
         int Y_ORIGINAL = originalImage.getHeight();
@@ -63,7 +63,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         int[] arrPixelsWatermark = watermark.getBlackWhitePixelsArr();
 
-        // М модуляция полученного массива базисными функциями
+        // Модуляция полученного массива базисными функциями
 
         int[][] E = modulation(X_ORIGINAL, Y_ORIGINAL, arrPixelsWatermark, f);
 
@@ -87,7 +87,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
     @Override
     public Watermark decode(Picture filledImage, int X_WATERMARK, int Y_WATERMARK, int startOfSequencePSP) throws Exception {
-        log.info("--------------------------- ДЕКОДИРОВАНИЕ ---------------------------");
+        log.info("--------------------------- ИЗВЛЕЧЕНИЕ ---------------------------");
 
         int X_ORIGINAL = filledImage.getWidth();
         int Y_ORIGINAL = filledImage.getHeight();

@@ -21,13 +21,8 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Controller {
-    @FXML private Button embedWatermarkBtn;
-    @FXML private Button readWatermarkBtn;
     @FXML private Button saveEmbeddingResultBtn;
     @FXML private Button saveReadResultBtn;
-    @FXML private Button selectOriginalImageBtn;
-    @FXML private Button selectWatermarkBtn;
-    @FXML private Button selectFilledImageBtn;
 
     @FXML private TextField startPspTextField = new TextField();
     @FXML private TextField watermarkWidth = new TextField();
@@ -165,7 +160,7 @@ public class Controller {
     public void onSaveReadResultBtn(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Сохранить ЦВЗ ...");
-        fileChooser.setInitialDirectory(new File(watermarkImageFile.getParent()));
+        fileChooser.setInitialDirectory(new File(filledImageFile.getParent()));
         // В название изображения встраивается стартовая позиция ПСП
         fileChooser.setInitialFileName("watermark" + startPsp + ".bmp");
         File file = fileChooser.showSaveDialog(stage);

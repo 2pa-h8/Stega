@@ -5,36 +5,36 @@ import java.awt.image.Raster;
 
 public class ImagesComparisonTools {
 
-    /* Number of bits used to store the mantissa in the 64-bit IEEE-754 standard */
-    public static final int DOUBLE_MANTISSA_BITS = 52;
+        // рассчет отношения синал/шум
+    public static double calculateSNR(BufferedImage img1, BufferedImage img2) {
+        int width = img1.getWidth();
+        int height = img1.getHeight();
 
-    /* Number of bits used to store the mantissa in the 32-bit IEEE-754 standard */
-    public static final int FLOAT_MANTISSA_BITS = 23;
+        double squareImg = 0;
+        double squareRecon = 0;
 
-    public static final byte POSITIVE = 0;
-    public static final byte NEGATIVE = 1;
+        int chanelNumber = 2; // blue
 
-    public static final int BLACK = 0;
-    public static final int WHITE = 1;
+        Raster r1 = img1.getRaster();
+        Raster r2 = img2.getRaster();
 
-    public static final int INSIGNIFICANT = 0;
-    public static final int SIGNIFICANT = 1;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                squareRecon += Math.pow(r1.getSample(x, y, chanelNumber), 2);
+                squareImg += Math.pow(r1.getSample(x, y, chanelNumber) - r2.getSample(x, y ,chanelNumber), 2);
+            }
+        }
 
+        return  10.0 * logBase10(squareRecon/squareImg);
+    }
 
-    /**
-     * Calculate the PSNR(peak signal-to-noise ratio) of two images.<br> Images must have the same dimensions and types.
-     *
-     * @param im1 first image
-     * @param im2 second image
-     *
-     * @return PSNR(peak signal-to-noise ratio)
-     */
-    public static double calculatePSNR(BufferedImage im1, BufferedImage im2 ) {
-        assert ( im1.getType() == im2.getType()
-                && im1.getHeight() == im2.getHeight()
-                && im1.getWidth() == im2.getWidth() );
+    // расчет пикового отношения сигнала к шуму
+    public static double calculatePSNR(BufferedImage img1, BufferedImage img2) {
+        assert ( img1.getType() == img2.getType()
+                && img1.getHeight() == img2.getHeight()
+                && img1.getWidth() == img2.getWidth() );
 
-        double MSE = calculateMSE( im1, im2 );
+        double MSE = calculateMSE(img1, img2);
 
         int maxVal = 255;
         double x = Math.pow( maxVal, 2 ) / MSE;
@@ -43,32 +43,25 @@ public class ImagesComparisonTools {
         return PSNR;
     }
 
-    /**
-     * Calculate the MSE(mean squared error) of two images.<br> Images must have the same dimensions and types.
-     *
-     * @param im1 first image
-     * @param im2 second image
-     *
-     * @return MSE(mean squared error)
-     */
-    public static double calculateMSE( BufferedImage im1, BufferedImage im2 ) {
-        assert ( im1.getType() == im2.getType()
-                && im1.getHeight() == im2.getHeight()
-                && im1.getWidth() == im2.getWidth() );
+    // рачет среднего квадрата ошибки
+    public static double calculateMSE( BufferedImage img1, BufferedImage img2 ) {
+        assert ( img1.getType() == img2.getType()
+                && img1.getHeight() == img2.getHeight()
+                && img1.getWidth() == img2.getWidth() );
 
         double MSE = 0;
 
-        int width = im1.getWidth();
-        int height = im1.getHeight();
+        int width = img1.getWidth();
+        int height = img1.getHeight();
 
-        Raster r1 = im1.getRaster();
-        Raster r2 = im2.getRaster();
+        Raster r1 = img1.getRaster();
+        Raster r2 = img2.getRaster();
 
         int chanelNumber = 2; // blue
 
         for( int j = 0; j < height; j++ ) {
             for( int i = 0; i < width; i++ ) {
-                MSE += Math.pow(r1.getSample( i, j, chanelNumber) - r2.getSample(i, j, chanelNumber), 2 );
+                MSE += Math.pow(r1.getSample( i, j, chanelNumber) - r2.getSample(i, j, chanelNumber), 2);
             }
         }
 
@@ -77,26 +70,12 @@ public class ImagesComparisonTools {
         return MSE;
     }
 
-    /**
-     * Calculate the RMSE(root mean squared error).<br> Images must have the same dimensions and types.
-     *
-     * @param im1 first image
-     * @param im2 second image
-     *
-     * @return RMSE(root mean squared error)
-     */
-    public static double calculateRMSE( BufferedImage im1, BufferedImage im2 ) {
-        double MSE = calculateMSE( im1, im2 );
-        return Math.sqrt( MSE );
+    // расчет нормированной среднеквадратической ошибки
+    public static double calculateNMSE( BufferedImage img1, BufferedImage img2 ) {
+        double MSE = calculateMSE( img1, img2 );
+        return Math.sqrt(MSE);
     }
 
-    /**
-     * Calculate the base-10 logarithm of the number.
-     *
-     * @param x number to calculate logarithm of
-     *
-     * @return base-10 logarithm of the number
-     */
     private static double logBase10(double x ) {
         return Math.log( x ) / Math.log( 10 );
     }

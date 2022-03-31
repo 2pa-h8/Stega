@@ -76,9 +76,10 @@ public class Picture {
         bufferedImage.setRGB(col, row, color.getRGB());
     }
 
-    public int[][] getColorComponent(String componentName) {
+    // получение значения пикселей в выбранном канале
+    public int[][] getColorComponent(String colorComponentName) {
         this.colorComponent = new int[height][width];
-        switch (componentName) {
+        switch (colorComponentName) {
             case("red") :
                 for (int x = 0; x < bufferedImage.getWidth(); x++) {
                     for (int y = 0; y < bufferedImage.getHeight(); y++) {
@@ -104,13 +105,14 @@ public class Picture {
         return this.colorComponent;
     }
 
-    public void setColorComponent(int[][] newComponent, String componentName) {
-        switch (componentName) {
+    // замена значения пикселей в выбранном канале
+    public void changeColorComponent(int[][] newColorComponent, String colorComponentName) {
+        switch (colorComponentName) {
             case("red") :
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
                         Color pixel = new Color(getRGB(x, y));
-                        Color newColor = new Color(newComponent[x][y], pixel.getGreen(), pixel.getBlue());
+                        Color newColor = new Color(newColorComponent[x][y], pixel.getGreen(), pixel.getBlue());
                         setColor(x, y, newColor);
                     }
                 } break;
@@ -118,7 +120,7 @@ public class Picture {
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
                         Color pixel = new Color(getRGB(x, y));
-                        Color newColor = new Color(pixel.getRed(), newComponent[x][y], pixel.getBlue());
+                        Color newColor = new Color(pixel.getRed(), newColorComponent[x][y], pixel.getBlue());
                         setColor(x, y, newColor);
                     }
                 } break;
@@ -126,7 +128,7 @@ public class Picture {
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
                         Color pixel = new Color(getRGB(x, y));
-                        Color newColor = new Color(pixel.getRed(), pixel.getGreen(), newComponent[x][y]);
+                        Color newColor = new Color(pixel.getRed(), pixel.getGreen(), newColorComponent[x][y]);
                         setColor(x, y, newColor);
                     }
                 } break;

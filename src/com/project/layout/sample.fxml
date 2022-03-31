@@ -20,29 +20,29 @@
                         <Font size="27.0" />
                     </font>
                 </Label>
-            <Button fx:id="embedWatermarkBtn" mnemonicParsing="false" text="Встроить ЦВЗ в изображение">
+            <Button fx:id="embedWatermarkBtn" mnemonicParsing="false" onAction="#onEmbedWatermarkBtn" text="Встроить ЦВЗ в изображение">
                <HBox.margin>
                   <Insets left="20.0" right="5.0" top="10.0" />
                </HBox.margin>
             </Button>
-                <Button fx:id="readWatermarkBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="153.0" text="Прочитать ЦВЗ">
+                <Button fx:id="readWatermarkBtn" mnemonicParsing="false" onAction="#onReadWatermarkBtn" prefHeight="25.0" prefWidth="153.0" text="Прочитать ЦВЗ">
                     <HBox.margin>
                         <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="saveEmbeddingResultBtn" mnemonicParsing="false" text="Сохранить результат встраивания">
+                <Button fx:id="saveEmbeddingResultBtn" mnemonicParsing="false" onAction="#onSaveEmbeddingResultBtn" text="Сохранить результат встраивания">
                     <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-            <Button fx:id="saveReadResultBtn" mnemonicParsing="false" text="Сохранить результат чтения">
+            <Button fx:id="saveReadResultBtn" mnemonicParsing="false" onAction="#onSaveReadResultBtn" text="Сохранить результат чтения">
                <HBox.margin>
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>
             </Button>
             </children>
         </HBox>
-      <VBox layoutX="16.0" layoutY="61.0" prefHeight="603.0" prefWidth="433.0">
+      <VBox layoutX="16.0" layoutY="61.0" prefHeight="348.0" prefWidth="433.0">
          <children>
             <Text fill="#02a7ff" strokeType="OUTSIDE" strokeWidth="0.0" text="Оригинальное изображение">
                <font>
@@ -52,47 +52,19 @@
                   <Insets left="20.0" top="10.0" />
                </VBox.margin>
             </Text>
-            <Button fx:id="selectOriginalImageBtn" mnemonicParsing="false" text="Выбрать оригинальное изображение">
+            <Button fx:id="selectOriginalImageBtn" mnemonicParsing="false" onAction="#onSelectOriginalImageBtn" text="Выбрать оригинальное изображение">
                <VBox.margin>
                   <Insets left="20.0" top="15.0" />
                </VBox.margin>
             </Button>
-            <Label text="Задайте стратовую позицию псевдослучайной последовательности (ПСП)">
+              <ImageView fx:id="originalImageView" pickOnBounds="true">
                <VBox.margin>
-                  <Insets left="20.0" top="10.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="startPspTextField1" maxHeight="-Infinity" maxWidth="-Infinity">
-               <VBox.margin>
-                  <Insets left="20.0" top="10.0" />
-               </VBox.margin>
-            </TextField>
-              <ImageView fx:id="originalImageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true">
-               <VBox.margin>
-                  <Insets left="110.0" top="10.0" />
-               </VBox.margin>
-            </ImageView>
-            <Text fill="#02a7ff" strokeType="OUTSIDE" strokeWidth="0.0" text="Цифровой водяной знак">
-               <font>
-                  <Font size="25.0" />
-               </font>
-               <VBox.margin>
-                  <Insets left="20.0" top="10.0" />
-               </VBox.margin>
-            </Text>
-            <Button fx:id="selectWatermarkBtn" mnemonicParsing="false" text="Выбрать ЦВЗ">
-               <VBox.margin>
-                  <Insets left="20.0" top="10.0" />
-               </VBox.margin>
-            </Button>
-            <ImageView fx:id="watermarkOriginalView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="110.0" top="20.0" />
+                  <Insets bottom="10.0" left="130.0" top="60.0" />
                </VBox.margin>
             </ImageView>
          </children>
       </VBox>
-      <VBox layoutX="464.0" layoutY="60.0" prefHeight="636.0" prefWidth="683.0">
+      <VBox layoutX="464.0" layoutY="60.0" prefHeight="355.0" prefWidth="683.0">
          <children>
             <Label prefHeight="23.0" prefWidth="370.0" text="Прочитать ЦВЗ из изображения" textFill="#02a7ff">
                <VBox.margin>
@@ -102,63 +74,113 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button fx:id="selectFilledImageBtn" mnemonicParsing="false" text="Выбрать заполненное изображение">
+            <Button fx:id="selectFilledImageBtn" mnemonicParsing="false" onAction="#onSelectFilledImageBtn" text="Выбрать заполненное изображение">
                <VBox.margin>
                   <Insets left="20.0" top="10.0" />
                </VBox.margin>
             </Button>
-            <Label text="Задайте стратовую позицию псевдослучайной последовательности (ПСП)" wrapText="true">
+            <Label text="Стартовая позиция псевдослучайной последовательности (ПСП)" wrapText="true">
                <VBox.margin>
                   <Insets bottom="10.0" left="20.0" top="10.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="startPspTextField2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+            <TextField fx:id="startPspTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                <VBox.margin>
                   <Insets left="20.0" />
                </VBox.margin>
             </TextField>
-            <ImageView fx:id="watermarkReadView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true">
+            <HBox prefHeight="36.0" prefWidth="683.0">
+               <children>
+                  <Label text="Ширина ЦВЗ">
+                     <HBox.margin>
+                        <Insets left="20.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label text="Высота ЦВЗ">
+                     <HBox.margin>
+                        <Insets left="100.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
                <VBox.margin>
-                  <Insets left="200.0" top="15.0" />
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="28.0" prefWidth="683.0">
+               <children>
+                  <TextField fx:id="watermarkWidth">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <TextField fx:id="watermarkHeight">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <ImageView fx:id="filledImageView" pickOnBounds="true">
+               <VBox.margin>
+                  <Insets left="300.0" top="30.0" />
                </VBox.margin>
             </ImageView>
-            <HBox prefHeight="18.0" prefWidth="683.0">
-               <children>
-                  <Label text="Результат встраивания" textFill="#02a7ff">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <Label text="Результат чтения" textFill="#02a7ff">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="140.0" />
-                     </HBox.margin>
-                  </Label>
-               </children>
+         </children>
+      </VBox>
+      <VBox layoutX="16.0" layoutY="430.0" prefHeight="297.0" prefWidth="433.0">
+         <children>
+            <Text fill="#02a7ff" strokeType="OUTSIDE" strokeWidth="0.0" text="Цифровой водяной знак">
+               <font>
+                  <Font size="25.0" />
+               </font>
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets left="20.0" />
                </VBox.margin>
-            </HBox>
-            <HBox prefHeight="221.0" prefWidth="683.0">
-               <children>
-                  <ImageView fx:id="embaddingResultView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true">
-                     <HBox.margin>
-                        <Insets left="60.0" top="20.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <ImageView fx:id="readingResultView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true">
-                     <HBox.margin>
-                        <Insets left="140.0" top="20.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
+            </Text>
+            <Button fx:id="selectWatermarkBtn" mnemonicParsing="false" onAction="#onSelectWatermarkBtn" text="Выбрать ЦВЗ">
                <VBox.margin>
-                  <Insets top="2.0" />
+                  <Insets left="20.0" top="15.0" />
                </VBox.margin>
-            </HBox>
+            </Button>
+            <ImageView fx:id="watermarkOriginalView" pickOnBounds="true" preserveRatio="true">
+               <VBox.margin>
+                  <Insets left="170.0" top="80.0" />
+               </VBox.margin>
+            </ImageView>
+         </children>
+      </VBox>
+      <VBox layoutX="464.0" layoutY="430.0" prefHeight="297.0" prefWidth="305.0">
+         <children>
+            <Label text="Результат встраивания" textFill="#02a7ff">
+               <font>
+                  <Font size="25.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="20.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <ImageView fx:id="embeddingResultView" pickOnBounds="true">
+               <VBox.margin>
+                  <Insets left="100.0" top="60.0" />
+               </VBox.margin>
+            </ImageView>
+         </children>
+      </VBox>
+      <VBox layoutX="857.0" layoutY="430.0" prefHeight="297.0" prefWidth="261.0">
+         <children>
+            <Label text="Результат чтения" textFill="#02a7ff">
+               <font>
+                  <Font size="25.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="20.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <ImageView fx:id="readingResultView" pickOnBounds="true">
+               <VBox.margin>
+                  <Insets left="110.0" top="100.0" />
+               </VBox.margin>
+            </ImageView>
          </children>
       </VBox>
     </children>

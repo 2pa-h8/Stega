@@ -13,8 +13,8 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     static Logger log = LoggerFactory.getLogger(SpreadSpectrum.class);
 
     @Override
-    public Picture encode(Picture originalImage, Watermark watermark) throws Exception {
-        log.info("---------------------------  КОДИРОВАНИЕ  ---------------------------");
+    public Picture encode(Picture originalImage, Watermark watermark, int startOfSequencePSP) throws Exception {
+        log.info("---------------------------  ВСТРИИВАНИЕ  ---------------------------");
         // размеры оригинального изображения
         int X_ORIGINAL = originalImage.getWidth();
         int Y_ORIGINAL = originalImage.getHeight();
@@ -34,19 +34,16 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         log.info("Общее число базисных функций Nfi : {}", Nfi);
 
-        int s = 55;
-
         // размерность значащего подмасива отдельной базисной функции
         int n = (int) Math.floor(Math.sqrt((X_ORIGINAL * Y_ORIGINAL)/Nfi));
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-        List<int[][]> f = getArrayOfBasicFunctions(X_ORIGINAL,
+        List<int[][]> f = getArrayOfBasicFunctions(
+                X_ORIGINAL,
                 Y_ORIGINAL,
-                X_WATERMARK,
-                Y_WATERMARK,
                 Nfi,
-                s,
+                startOfSequencePSP,
                 n
         );
 
@@ -66,7 +63,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         int[] arrPixelsWatermark = watermark.getBlackWhitePixelsArr();
 
-        // М модуляция полученного массива базисными функциями
+        // Модуляция полученного массива базисными функциями
 
         int[][] E = modulation(X_ORIGINAL, Y_ORIGINAL, arrPixelsWatermark, f);
 
@@ -83,14 +80,14 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
         // Формирование контейнера S = Cnorm + Kg * E
         int[][] S = MatrixUtil.add(cNorm, MatrixUtil.multiplyingMatrixByNumber(E, Kg));
 
-        originalImage.setColorComponent(S, chanel);
+        originalImage.changeColorComponent(S, chanel);
 
         return originalImage;
     }
 
     @Override
-    public Picture decode(Picture filledImage, int X_WATERMARK, int Y_WATERMARK, int startOfSequencePSP) throws Exception {
-        log.info("--------------------------- ДЕКОДИРОВАНИЕ ---------------------------");
+    public Watermark decode(Picture filledImage, int X_WATERMARK, int Y_WATERMARK, int startOfSequencePSP) throws Exception {
+        log.info("--------------------------- ИЗВЛЕЧЕНИЕ ---------------------------");
 
         int X_ORIGINAL = filledImage.getWidth();
         int Y_ORIGINAL = filledImage.getHeight();
@@ -99,8 +96,6 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
         log.info("Высота заполненного контейнера Y_ORIGINAL : {}", Y_ORIGINAL);
         log.info("Ширина извлекаемого ЦВЗ X_WATERMARK : {}", X_WATERMARK);
         log.info("Высота извлекаемого ЦВЗ Y_WATERMARK : {}", Y_WATERMARK);
-
-        log.info("Начальное состаяние регистра s : {}", startOfSequencePSP);
 
         String chanel = Picture.BLUE_CHANEL;
         int[][] colorComponents = filledImage.getColorComponent(chanel);
@@ -117,10 +112,9 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         log.info("Размерность значащего подмасива отдельной базисной функции n : {}", n);
 
-        List<int[][]> f = getArrayOfBasicFunctions(X_ORIGINAL,
+        List<int[][]> f = getArrayOfBasicFunctions(
+                X_ORIGINAL,
                 Y_ORIGINAL,
-                X_WATERMARK,
-                Y_WATERMARK,
                 Nfi,
                 startOfSequencePSP,
                 n
@@ -146,7 +140,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     // Извлечение ЦВЗ из контейнера
 
     static int[] extraction(int X, int Y, int Nfi, int[][] S, List<int[][]> matricesF) {
-        int[] result = new int[Nfi];
+        int[] bitPixelsArr = new int[Nfi];
         Random rnd = new Random();
         int m = 0;
 
@@ -159,17 +153,17 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
             }
 
             if (m > 0) {
-                result[i] = 1;
+                bitPixelsArr[i] = 1;
             } else if (m < 0) {
-                result[i] = 0;
+                bitPixelsArr[i] = 0;
             } else {
-                result[i] = Math.round(rnd.nextFloat());
+                bitPixelsArr[i] = Math.round(rnd.nextFloat());
             }
 
             m = 0;
         }
 
-        return result;
+        return bitPixelsArr;
     }
 
     // Вычисление степени ортогональности
@@ -222,7 +216,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     // М Модуляция полученного массива базисными функциями
     static int[][] modulation(int X, int Y, int[] M, List<int[][]> f) {
         int mLength = M.length;
-        int[][] result = new int[X][Y];
+        int[][] modResult = new int[X][Y];
         ArrayList<Integer> mVecBin = new ArrayList<>();
 
         // замена 0 на -1 в массиве значений ЦВЗ
@@ -241,14 +235,14 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
                     int[][] element = f.get(i);
                     sum += mVecBin.get(i) * element[x][y];
                 }
-                result[x][y] = sum;
+                modResult[x][y] = sum;
             }
         }
 
-        return result;
+        return modResult;
     }
 
-    static List<int[][]> getArrayOfBasicFunctions(int X_ORIGINAL, int Y_ORIGINAL, int X_WATERMARK, int Y_WATERMARK, int Nfi, int s, int n) {
+    static List<int[][]> getArrayOfBasicFunctions(int X_ORIGINAL, int Y_ORIGINAL, int Nfi, int s, int n) {
         if (s >= Nfi) {
             return null; // Исключение
         }
@@ -296,11 +290,11 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
     // Формирование массива базисных функиций
     static List<int[][]> formationOfArrayOfBasisFunctions(int[][] basicFunc, int[] psp, int n, int X, int Y, int Nfi) {
-        List<int[][]> matrices = new ArrayList<>();
+        List<int[][]> f = new ArrayList<>();
 
         // подготовка контейнера - заполнение
         for (int i = 0; i < Nfi; i++) {
-            matrices.add(null);
+            f.add(null);
         }
 
         // Формирование матрицу на основе матрицы baseFunc и заполнение 0
@@ -316,7 +310,8 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
 
         ArrayList<Integer> removedList = new ArrayList<>();
         int k = 0;
-        for (int i = 0; i < 128; i++) {
+
+        for (int i = 0; i < X; i++) {
             removedList.add(k);
             k++;
         }
@@ -344,12 +339,12 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
             // вырезание матрицы
             int[][] submatrix = MatrixUtil.slice(basicFunc, rangeColumns, rangeRows);
             // встраивание матрицы
-            int[][] result = MatrixUtil.putregion(tempMatrix, submatrix, r1, c1);
+            int[][] resultPutregion = MatrixUtil.putregion(tempMatrix, submatrix, r1, c1);
 
             /* установка матрицы в результирующий контейнер,
                в качестве индекса контейнера выступает значение
                псп */
-            matrices.set(indexPsp, result);
+            f.set(indexPsp, resultPutregion);
 
             if (r2 == X - 1) {
                 c1 += n;
@@ -357,7 +352,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
             }
         }
 
-        return matrices;
+        return f;
     }
 
     // Генератор псевдослучайно последовательности (ПСП)
@@ -410,7 +405,7 @@ public class SpreadSpectrum extends SteganographyAlgorithm {
     }
 
     // Перевод из 10-й в 2-ю систему счисления
-    static int[] d2b(int x, int length) { // здесь нужно добавить корретную проверку на знак
+    static int[] d2b(int x, int length) {
         int[] result = new int[length];
         for (int i = 0; i < length; i++) {
             result[i] = Math.abs(x) % 2;
